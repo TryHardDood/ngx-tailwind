@@ -12,15 +12,11 @@ Simple [Angular](https://angular.io/) schematic initializing [Tailwind CSS](http
 Run
 
 ```bash
-npm install https://github.com/TryHardDood/ngx-tailwind
-yarn add https://github.com/TryHardDood/ngx-tailwind
-ng generate ngx-tailwind:ng-add
+ng add @tryharddood/ngx-tailwind
 
 # or
 
-npm install https://github.com/TryHardDood/ngx-tailwind
-yarn add https://github.com/TryHardDood/ngx-tailwind
-ng generate ngx-tailwind:ng-add --project <MY_PROJECT>
+ng add @tryharddood/ngx-tailwind --project <MY_PROJECT>
 ```
 
 Example output
@@ -34,19 +30,6 @@ UPDATE package.json (1782 bytes)
 UPDATE src/styles.scss (97 bytes)
 √ Packages installed successfully.
 ```
-
-## Migrate from Tailwind CSS v1 to v2
-
-To upgrade you project from [Tailwind CSS v1.x to v2.0](https://tailwindcss.com/docs/upgrading-to-v2) run the following install command
-
-```bash
-npm i -D tailwindcss@latest autoprefixer@latest postcss@latest postcss-import@latest postcss-loader@latest
-
-# using scss
-npm i -D postcss-scss@latest
-```
-
-Read the full [Upgrade Guide](https://tailwindcss.com/docs/upgrading-to-v2) to update your custom `tailwind.config.js` (e.g. [your color palette](https://tailwindcss.com/docs/upgrading-to-v2#configure-your-color-palette-explicitly)) and replace removed classes from your template (e.g. [shadow-outline and shadow-xs](https://tailwindcss.com/docs/upgrading-to-v2#replace-shadow-outline-and-shadow-xs-with-ring-utilities)).
 
 All available flags:
 
