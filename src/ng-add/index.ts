@@ -22,9 +22,7 @@ import { InsertChange } from '@schematics/angular/utility/change';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Schema } from './schema';
 import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import {
-  getWorkspace
-} from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { strings } from '@angular-devkit/core';
 
 export function ngAdd(_options: Schema): Rule {

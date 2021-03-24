@@ -14,7 +14,10 @@
       "description": "The file extension or preprocessor to use for style files.",
       "type": "string",
       "default": "css",
-      "enum": ["css", "scss"],
+      "enum": [
+        "css",
+        "scss"
+      ],
       "x-prompt": {
         "message": "Which stylesheet format are you using?",
         "type": "list",
@@ -57,7 +60,12 @@
       "type": "array",
       "uniqueItems": true,
       "items": {
-        "enum": ["aspect-ratio", "forms", "line-clamp", "typography"],
+        "enum": [
+          "aspect-ratio",
+          "forms",
+          "line-clamp",
+          "typography"
+        ],
         "type": "string"
       },
       "x-prompt": "Which @tailwindcss plugins do you want to install?"
