@@ -36,7 +36,7 @@
   "dependencies": {
     "@angular-devkit/core": "^11.0.0",
     "@angular-devkit/schematics": "^11.0.0",
-    "@angular/cdk": "~11.0.0",
+    "@angular/cdk": "~11.2.5",
     "@schematics/angular": "^11.0.0"
   },
   "devDependencies": {
