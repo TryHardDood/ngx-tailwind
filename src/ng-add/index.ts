@@ -1,37 +1,31 @@
-import { strings } from '@angular-devkit/core';
+import {
+  NodeDependencyType,
+  addPackageJsonDependency
+} from '@schematics/angular/utility/dependencies';
 import {
   Rule,
   SchematicContext,
-  Tree,
-  chain,
   SchematicsException,
-  url,
+  Tree,
   apply,
+  chain,
   mergeWith,
   template,
+  url
 } from '@angular-devkit/schematics';
-import { Schema } from './schema';
 import {
   getProjectFromWorkspace,
-  getProjectStyleFile,
-  getTargetsByBuilderName,
+  getProjectStyleFile
 } from '@angular/cdk/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import {
-  addPackageJsonDependency,
-  NodeDependencyType,
-} from '@schematics/angular/utility/dependencies';
-import {
-  getWorkspace,
-  updateWorkspace,
-} from '@schematics/angular/utility/workspace';
-import { InsertChange } from '@schematics/angular/utility/change';
-import { Builders } from '@schematics/angular/utility/workspace-models';
-import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
 
-const NGX_BUILD_PLUS_BUILDER_TARGET = 'ngx-build-plus:browser';
-const NGX_BUILD_PLUS_DEV_BUILDER_TARGET = 'ngx-build-plus:dev-server';
-const NGX_BUILD_PLUS_KARMA_BUILDER_TARGET = 'ngx-build-plus:karma';
+import { InsertChange } from '@schematics/angular/utility/change';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { Schema } from './schema';
+import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
+import {
+  getWorkspace
+} from '@schematics/angular/utility/workspace';
+import { strings } from '@angular-devkit/core';
 
 export function ngAdd(_options: Schema): Rule {
   return async (host: Tree) => {
@@ -61,26 +55,14 @@ export function ngAdd(_options: Schema): Rule {
       (plugin) => `require('${plugin}')\n`,
     );
 
-    if (_options.angularCliWithTailwindSupport) {
-      return chain([
-        addDependenciesWithTailwindSupport(_options),
-        addTailwindPlugins(tailwindPluginDependencies),
-        addNpmScripts(_options),
-        updateStyles(_options, workspace),
-        generateTailwindConfig(_options, requireTailwindPlugins),
-        install(),
-      ]);
-    } else {
-      return chain([
-        addDependenciesBeforeTailwindSupport(_options),
-        addTailwindPlugins(tailwindPluginDependencies),
-        addNpmScripts(_options),
-        updateStyles(_options, workspace),
-        generateTailwindAndWebpackConfig(_options, requireTailwindPlugins),
-        updateAngularJSON(_options, workspace),
-        install(),
-      ]);
-    }
+    return chain([
+      addDependenciesWithTailwindSupport(_options),
+      addTailwindPlugins(tailwindPluginDependencies),
+      addNpmScripts(_options),
+      updateStyles(_options, workspace),
+      generateTailwindConfig(_options, requireTailwindPlugins),
+      install(),
+    ]);
   };
 }
 
@@ -92,59 +74,16 @@ function addDependenciesWithTailwindSupport(_options: Schema): Rule {
       version: _options.tailwindVersion,
     });
 
-    if (!_options.disableCrossPlatform) {
-      addPackageJsonDependency(host, {
-        type: NodeDependencyType.Dev,
-        name: 'cross-env',
-        version: _options.crossEnvVersion,
-      });
-    }
-  };
-}
-function addDependenciesBeforeTailwindSupport(_options: Schema): Rule {
-  return (host: Tree) => {
     addPackageJsonDependency(host, {
       type: NodeDependencyType.Dev,
-      name: 'tailwindcss',
-      version: _options.tailwindVersion,
-    });
-
-    addPackageJsonDependency(host, {
-      type: NodeDependencyType.Dev,
-      name: 'autoprefixer',
-      version: _options.autoprefixerVersion,
+      name: '@tailwindcss/jit',
+      version: _options.tailwindJitVersion,
     });
 
     addPackageJsonDependency(host, {
       type: NodeDependencyType.Dev,
       name: 'postcss',
       version: _options.postcssVersion,
-    });
-
-    if (_options.cssFormat === 'scss') {
-      addPackageJsonDependency(host, {
-        type: NodeDependencyType.Dev,
-        name: 'postcss-scss',
-        version: _options.postcssScssVersion,
-      });
-    }
-
-    addPackageJsonDependency(host, {
-      type: NodeDependencyType.Dev,
-      name: 'postcss-import',
-      version: _options.postcssImportVersion,
-    });
-
-    addPackageJsonDependency(host, {
-      type: NodeDependencyType.Dev,
-      name: 'postcss-loader',
-      version: _options.postcssLoaderVersion,
-    });
-
-    addPackageJsonDependency(host, {
-      type: NodeDependencyType.Dev,
-      name: 'ngx-build-plus',
-      version: _options.ngxBuildPlusVersion,
     });
 
     if (!_options.disableCrossPlatform) {
@@ -200,9 +139,9 @@ function updateStyles(options: Schema, workspace: WorkspaceDefinition): Rule {
  * Used for css stylesheets
  */
 function getTailwindDirectives(): string {
-  return `@tailwind 'tailwindcss/base';\n
-@tailwind 'tailwindcss/components';\n
-@tailwind 'tailwindcss/utilities';\n`;
+  return `@tailwind base;\n
+@tailwind components;\n
+@tailwind utilities;\n`;
 }
 
 /**
@@ -235,68 +174,6 @@ function generateTailwindConfig(
     return mergeWith(sourceParametrizedTemplates);
   };
 }
-/**
- * Generate webpack and tailwind config.
- *
- * @param options
- */
-function generateTailwindAndWebpackConfig(
-  options: Schema,
-  requireTailwindPlugins: string[],
-): Rule {
-  return async (_host: Tree) => {
-    const sourceTemplates = url(`./templates/configs`);
-    const sourceParametrizedTemplates = apply(sourceTemplates, [
-      template({
-        ...options,
-        requireTailwindPlugins: requireTailwindPlugins,
-        ...strings,
-      }),
-    ]);
-    return mergeWith(sourceParametrizedTemplates);
-  };
-}
-
-function updateAngularJSON(
-  options: Schema,
-  workspace: WorkspaceDefinition,
-): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    const project = getProjectFromWorkspace(workspace, options.project);
-
-    const browserTargets = getTargetsByBuilderName(project, Builders.Browser);
-    const devServerTargets = getTargetsByBuilderName(
-      project,
-      Builders.DevServer,
-    );
-    const karmaServerTargets = getTargetsByBuilderName(project, Builders.Karma);
-
-    browserTargets.forEach((browserTarget) => {
-      browserTarget.builder = NGX_BUILD_PLUS_BUILDER_TARGET;
-      browserTarget.options = {
-        extraWebpackConfig: 'webpack.config.js',
-        ...(browserTarget.options as any),
-      };
-    });
-    devServerTargets.forEach((browserTarget) => {
-      browserTarget.builder = NGX_BUILD_PLUS_DEV_BUILDER_TARGET;
-      browserTarget.options = {
-        extraWebpackConfig: 'webpack.config.js',
-        ...(browserTarget.options as any),
-      };
-    });
-
-    karmaServerTargets.forEach((browserTarget) => {
-      browserTarget.builder = NGX_BUILD_PLUS_KARMA_BUILDER_TARGET;
-      browserTarget.options = {
-        extraWebpackConfig: 'webpack.config.js',
-        ...(browserTarget.options as any),
-      };
-    });
-
-    return updateWorkspace(workspace)(tree, context);
-  };
-}
 
 function addNpmScripts(_options: Schema): Rule {
   return (tree: Tree) => {
@@ -309,11 +186,18 @@ function addNpmScripts(_options: Schema): Rule {
 
     const pkg = JSON.parse(buffer.toString());
 
+    if (pkg.scripts['postinstall']) {
+      pkg.scripts['postinstall'] = `${pkg.scripts['postinstall']} && node ./scripts/ngx-tailwind-jit-transform.js`;
+    } else {
+      pkg.scripts['postinstall'] = 'node ./scripts/ngx-tailwind-jit-transform.js';
+    }
+
     if (_options.disableCrossPlatform) {
       pkg.scripts['build:prod'] = 'NODE_ENV=production ng build --prod';
+      pkg.scripts['start:dev'] = 'TAILWIND_MODE=watch ng serve';
     } else {
-      pkg.scripts['build:prod'] =
-        'cross-env NODE_ENV=production ng build --prod';
+      pkg.scripts['build:prod'] = 'cross-env NODE_ENV=production ng build --prod';
+      pkg.scripts['start:dev'] = 'cross-env TAILWIND_MODE=watch ng serve';
     }
 
     tree.overwrite(pkgPath, JSON.stringify(pkg, null, 2));

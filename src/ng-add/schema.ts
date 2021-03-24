@@ -1,23 +1,8 @@
 export interface Schema {
   /**
-   * Angular CLI Version above 11.2 with Tailwind CSS support.
-   */
-  angularCliWithTailwindSupport: boolean;
-
-  /**
-   * Autoprefixer version.
-   */
-  autoprefixerVersion: string;
-
-  /**
    * Css stylesheet format.
    */
   cssFormat: CssFormat;
-
-  /**
-   * ngx-build-plus version.
-   */
-  ngxBuildPlusVersion: string;
 
   /**
    * The project in which we want to generate our component.
@@ -30,21 +15,6 @@ export interface Schema {
   postcssVersion: string;
 
   /**
-   * postcss-import version.
-   */
-  postcssImportVersion: string;
-
-  /**
-   * postcss-loader version.
-   */
-  postcssLoaderVersion: string;
-
-  /**
-   * postcss-scss version.
-   */
-  postcssScssVersion: string;
-
-  /**
    * Skip initializing Tailwind CSS.
    */
   skipTailwindInit?: boolean;
@@ -53,6 +23,11 @@ export interface Schema {
    * Tailwind CSS version.
    */
   tailwindVersion: string;
+  
+  /**
+   * Tailwind JIT version.
+   */
+   tailwindJitVersion: string;
 
   /**
    * Set the build:prod script to be only UNIX compatible.

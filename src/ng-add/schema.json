@@ -5,16 +5,6 @@
   "type": "object",
   "description": "Add Tailwind CSS to an Angular project",
   "properties": {
-    "autoprefixerVersion": {
-      "type": "string",
-      "description": "The autoprefixer version to be installed.",
-      "default": "^10.2.4"
-    },
-    "angularCliWithTailwindSupport": {
-      "description": "Angular CLI Version above 11.2 with Tailwind CSS support.",
-      "type": "boolean",
-      "x-prompt": "Are you using Angular CLI in version 11.2 or above?"
-    },
     "crossEnvVersion": {
       "type": "string",
       "description": "The cross-env version to be installed.",
@@ -45,11 +35,6 @@
       "description": "Set the build:prod script to be only UNIX compatible.",
       "default": false
     },
-    "ngxBuildPlusVersion": {
-      "type": "string",
-      "description": "The ngx-build-plus version to be installed.",
-      "default": "^11.0.0"
-    },
     "project": {
       "type": "string",
       "description": "The project in which we want to generate our component",
@@ -61,21 +46,6 @@
       "type": "string",
       "description": "The postcss version to be installed.",
       "default": "^8.2.6"
-    },
-    "postcssImportVersion": {
-      "type": "string",
-      "description": "The postcss-import version to be installed.",
-      "default": "^14.0.0"
-    },
-    "postcssLoaderVersion": {
-      "type": "string",
-      "description": "The postcss-loader version to be installed.",
-      "default": "^4.2.0"
-    },
-    "postcssScssVersion": {
-      "type": "string",
-      "description": "The postcss-scss version to be installed.",
-      "default": "^3.0.4"
     },
     "skipTailwindInit": {
       "type": "boolean",
@@ -96,6 +66,11 @@
       "type": "string",
       "description": "The Tailwind version to be installed.",
       "default": "^2.0.3"
+    },
+    "tailwindJitVersion": {
+      "type": "string",
+      "description": "The Tailwind Just-In-Time compiler version to be installed.",
+      "default": "^0.1.7"
     }
   }
 }
