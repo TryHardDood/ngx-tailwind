@@ -5,33 +5,34 @@
 
 Simple [Angular](https://angular.io/) schematic initializing [Tailwind CSS](https://tailwindcss.com/) in your project. [Angular v11.2](https://twitter.com/angular/status/1359736376581840896) includes native support for Tailwind CSS. 
 
-For all versions **before** Angular v11.2 a custom webpack config is added to your build process.
+## Only works with Angular v11.2 and up.
 
 ## Installation
 
 Run
 
 ```bash
-ng add ngx-tailwind
+npm install https://github.com/TryHardDood/ngx-tailwind
+yarn add https://github.com/TryHardDood/ngx-tailwind
+ng generate ngx-tailwind:ng-add
 
 # or
 
-ng add ngx-tailwind --project <MY_PROJECT>
+npm install https://github.com/TryHardDood/ngx-tailwind
+yarn add https://github.com/TryHardDood/ngx-tailwind
+ng generate ngx-tailwind:ng-add --project <MY_PROJECT>
 ```
 
 Example output
 
 ```bash
-Installing packages for tooling via npm.
-Installed packages for tooling via npm.
-? Which stylesheet format are you using? CSS
-CREATE webpack.config.js (428 bytes)
-UPDATE package.json (1498 bytes)
-UPDATE src/styles.scss (177 bytes)
-UPDATE angular.json (3848 bytes)
-✔ Packages installed successfully.
-✔ Packages installed successfully.
-    Initialized Tailwind
+? Which stylesheet format are you using? SCSS [ https://sass-lang.com/documentation/syntax#scss ]
+? Which @tailwindcss plugins do you want to install? aspect-ratio, forms, line-clamp, typography
+CREATE tailwind.config.js (360 bytes)
+CREATE scripts/ngx-tailwind-jit-transform.js (367 bytes)
+UPDATE package.json (1782 bytes)
+UPDATE src/styles.scss (97 bytes)
+√ Packages installed successfully.
 ```
 
 ## Migrate from Tailwind CSS v1 to v2
@@ -47,51 +48,18 @@ npm i -D postcss-scss@latest
 
 Read the full [Upgrade Guide](https://tailwindcss.com/docs/upgrading-to-v2) to update your custom `tailwind.config.js` (e.g. [your color palette](https://tailwindcss.com/docs/upgrading-to-v2#configure-your-color-palette-explicitly)) and replace removed classes from your template (e.g. [shadow-outline and shadow-xs](https://tailwindcss.com/docs/upgrading-to-v2#replace-shadow-outline-and-shadow-xs-with-ring-utilities)).
 
-## Additional options
-
-You can pass additional flags to customize the schematic. For example, if you want to install a different version for **Tailwind** use `--tailwindVersion` flag:
-
-```bash
-ng add ngx-tailwind --tailwindVersion 1.9.5
-```
-
 All available flags:
 
 | Flag                             |  Description                                                   | Type             |  Default                                              |
 | -------------------------------- | -------------------------------------------------------------- | ---------------- | ----------------------------------------------------- |
-|  `autoprefixerVersion`           | The autoprefixer version to be installed.                      | string           | `^10.2.4`                                             |
-|  `angularCliWithTailwindSupport` | Angular CLI Version above 11.2 with Tailwind CSS support.      | boolean          | Prompted                                              |
 |  `cssFormat`                     | The file extension or preprocessor to use for style files.     | `css` \|  `scss` | `css`                                                 |
-|  `ngxBuildPlusVersion`           | The ngx-build-plus version to be installed.                    | `string`         | `^11.0.0`                                             |
 |  `project`                       | The project to initialize with Tailwind CSS.                   | `string`         | **First** Angular project                             |
 |  `postcssVersion`                | The postcss version to be installed.                           | `string`         | `^8.2.6`                                              |
-|  `postcssImportVersion`          | The postcss-import version to be installed.                    | `string`         | `^14.0.0`                                             |
-|  `postcssLoaderVersion`          | The postcss-loader version to be installed.                    | `string`         | `^4.2.0`                                              |
-|  `postcssScssVersion`            | The postcss-scss version to be installed.                      | `string`         | `^3.0.4`                                              |
 |  `skipTailwindInit`              | Skip initializing Tailwind.                                    | `boolean`        | `false`                                               |
 |  `tailwindVersion`               | The Tailwind version to be installed.                          | `string`         | `^2.0.3`                                              |
 |  `disableCrossPlatform`          | Set the build:prod script to be only UNIX compatible.          | `boolean`        | `false`                                               |
 |  `crossEnvVersion`               | The cross-env version to be installed.                         | `string`         | `^7.0.3`                                              |
 |  `tailwindPlugins`               | @tailwindcss plugins installed and added to tailwind.config.js | `string[]`       | [`aspect-ratio`, `forms`, `line-clamp`, `typography`] |
-
-Advanced usage
-
-```bash
-ng add ngx-tailwind --cssFormat scss --tailwindVersion 2.0.0 --ngxBuildPlusVersion 10.1.1 --postcssVersion 8.0.0 --postcssImportVersion 13.0.0 --postcssLoaderVersion 4.0.4 --postcssScssVersion 3.0.4
-```
-
-Want to integrate Tailwind CSS in version 1.x.x? No problem:
-
-```bash
-ng add ngx-tailwind --tailwindVersion 1.9.6 --ngxBuildPlusVersion 10.1.1 --postcssVersion 7.0.35 --postcssImportVersion 12.0.1 --postcssLoaderVersion 4.0.4 --postcssScssVersion 3.0.4
-```
-
-By default, `cross-env` is added to the `build:prod` script to be able to set `NODE_ENV=prod` cross-platform.
-If you want to override the default behavior, you can set the flag `--disableCrossPlatform`:
-
-```bash
-ng add ngx-tailwind --disableCrossPlatform
-```
 
 ## Developing
 
